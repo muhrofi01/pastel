@@ -6,6 +6,7 @@ use App\Filament\Resources\PenilaianInfografisResource\Pages;
 use App\Filament\Resources\PenilaianInfografisResource\RelationManagers;
 use App\Models\Infografis;
 use App\Models\PenilaianInfografis;
+use App\Models\PeriodePenilaian;
 use Filament\Forms;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Hidden;
@@ -33,20 +34,40 @@ class PenilaianInfografisResource extends Resource
                 Hidden::make('user_id')
                     ->default(fn () => auth()->user()?->id),
                 Select::make('periode_penilaian_id')
-                    ->relationship('periode_penilaian', 'judul')
-                    ->preload()
+                    ->relationship(
+                        'periode_penilaian', 
+                        'triwulan',  
+                        // fn ($query) => $query
+                        //     ->whereDate('mulai', '<=', now())
+                        //     ->whereDate('berakhir', '>=', now())
+                    )
                     ->columnSpan([
                         'default' => '1',
                         'sm' => '2'
                     ])
+                    ->preload()
+                    ->reactive()
+                    ->afterStateUpdated(fn (callable $set) => $set('infografis_id', []))
                     ->required(),
                 CheckboxList::make('infografis_id')
-                    ->options(
-                        Infografis::whereNot('user_id', auth()->user()?->id)->get()->mapWithKeys(function ($infografis) {
-                            return [
-                                $infografis->id => "<img src='".Storage::disk('public')->url($infografis->gambar_1). "' title='{$infografis->judul}'>"
-                            ];
-                        })->toArray()
+                    ->label('Pilih 3 Infografis Terbaik')
+                    ->options(function (callable $get) {
+                        $periodeId = $get('periode_penilaian_id'); // ambil value select sebelumnya
+                        
+                        if (!$periodeId) {
+                            return []; // belum pilih periode → kosong
+                        }
+                        
+                        return Infografis::where('triwulan', PeriodePenilaian::find("9f970268-48ae-4608-b0bc-6b8c3eee8f90")->triwulan)
+                            ->where('user_id', '!=', auth()->id())
+                            ->get()
+                            ->mapWithKeys(function ($infografis) {
+                                return [
+                                    (string) $infografis->id => "<img src='" . Storage::disk('public')->url($infografis->gambar_1) . "' title='{$infografis->judul}'>",
+                                ];
+                            })
+                            ->toArray();
+                        }   
                     )
                     ->columns(3)
                     ->columnSpan([
@@ -59,6 +80,7 @@ class PenilaianInfografisResource extends Resource
                         'array',
                         'size:3', // Harus tepat 3 pilihan
                     ])
+                    ->required()
             ]);
     }
 
@@ -67,11 +89,13 @@ class PenilaianInfografisResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('user.name')
-                    ->label('Pegawai')
-                    ->wrap(),
-                TextColumn::make('periode_penilaian.judul')
-                    ->label('Periode')
-                    ->wrap(),
+                    ->label('Pegawai'),
+                TextColumn::make('periode_penilaian.triwulan')
+                    ->label('Triwulan')  ,
+                TextColumn::make('periode_penilaian.tahun')
+                    ->label('Tahun'),
+                TextColumn::make('periode_penilaian.jenis')
+                    ->label('Jenis'),
             ]);
     }
 

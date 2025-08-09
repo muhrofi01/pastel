@@ -7,6 +7,7 @@ use App\Filament\Resources\PeriodePenilaianResource\RelationManagers;
 use App\Models\PeriodePenilaian;
 use Filament\Forms;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -28,14 +29,32 @@ class PeriodePenilaianResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('judul')
-                    ->required(),
-                Select::make('jenis')
-                        ->options([
-                            'IGA BAKAR' => 'IGA BAKAR',
-                            'PEMPEG' => 'PEMPEG',
-                        ])
-                        ->required(),
+                Grid::make([
+                    'default' => 1,
+                    'sm' => 3,
+                ])
+                    ->schema([
+                        Select::make('triwulan')
+                                ->options([
+                                    'Triwulan I' => 'Triwulan I',
+                                    'Triwulan II' => 'Triwulan II',
+                                    'Triwulan III' => 'Triwulan III',
+                                    'Triwulan IV' => 'Triwulan IV',
+                                ])
+                                ->required(),
+                        Select::make('tahun')
+                                ->options([
+                                    '2025' => '2025',
+                                ])
+                                ->required(),
+                        Select::make('jenis')
+                                ->options([
+                                    'IGA BAKAR' => 'IGA BAKAR',
+                                    'PEMPEG' => 'PEMPEG',
+                                ])
+                                ->required(),
+                    ]),
+                
                 DateTimePicker::make('mulai')
                     ->required(),
                 DateTimePicker::make('berakhir')
@@ -47,7 +66,8 @@ class PeriodePenilaianResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('judul'),
+                TextColumn::make('triwulan'),
+                TextColumn::make('tahun'),
                 TextColumn::make('jenis'),
                 TextColumn::make('mulai'),
                 TextColumn::make('berakhir'),

@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('periode_penilaians', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('judul');
+            $table->string('triwulan');
+            $table->string('tahun');
+            $table->string('jenis'); 
             $table->dateTime('mulai');
             $table->dateTime('berakhir');
             $table->timestamps();
