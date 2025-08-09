@@ -48,4 +48,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Infografis::class, 'infografis_id');
     }
+
+    public function penilaian_infografis()
+    {
+        return $this->hasMany(PenilaianInfografis::class, 'penilaian_infografis_id');
+    }
 }

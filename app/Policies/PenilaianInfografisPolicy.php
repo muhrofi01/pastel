@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Infografis;
+use App\Models\PenilaianInfografis;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class InfografisPolicy
+class PenilaianInfografisPolicy
 {
     use HandlesAuthorization;
 
@@ -15,15 +15,15 @@ class InfografisPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('view_any_infografis');
+        return $user->can('view_any_penilaian::infografis');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Infografis $infografis): bool
+    public function view(User $user, PenilaianInfografis $penilaianInfografis): bool
     {
-        return $user->can('view_infografis');
+        return $user->can('view_penilaian::infografis');
     }
 
     /**
@@ -31,23 +31,23 @@ class InfografisPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_infografis');
+        return $user->can('create_penilaian::infografis');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Infografis $infografis): bool
+    public function update(User $user, PenilaianInfografis $penilaianInfografis): bool
     {
-        return $user->can('update_infografis');
+        return $user->can('update_penilaian::infografis');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Infografis $infografis): bool
+    public function delete(User $user, PenilaianInfografis $penilaianInfografis): bool
     {
-        return $user->can('delete_infografis');
+        return $user->can('delete_penilaian::infografis');
     }
 
     /**
@@ -55,13 +55,13 @@ class InfografisPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_infografis');
+        return $user->can('delete_any_penilaian::infografis');
     }
 
     /**
      * Determine whether the user can permanently delete.
      */
-    public function forceDelete(User $user, Infografis $infografis): bool
+    public function forceDelete(User $user, PenilaianInfografis $penilaianInfografis): bool
     {
         return $user->can('{{ ForceDelete }}');
     }
@@ -77,7 +77,7 @@ class InfografisPolicy
     /**
      * Determine whether the user can restore.
      */
-    public function restore(User $user, Infografis $infografis): bool
+    public function restore(User $user, PenilaianInfografis $penilaianInfografis): bool
     {
         return $user->can('{{ Restore }}');
     }
@@ -93,7 +93,7 @@ class InfografisPolicy
     /**
      * Determine whether the user can replicate.
      */
-    public function replicate(User $user, Infografis $infografis): bool
+    public function replicate(User $user, PenilaianInfografis $penilaianInfografis): bool
     {
         return $user->can('{{ Replicate }}');
     }
