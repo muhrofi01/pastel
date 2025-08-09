@@ -16,10 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('judul');
-            $table->text('gambar_1')->nullable();
-            $table->text('gambar_2')->nullable();
-            $table->text('gambar_3')->nullable();
-            $table->text('gambar_4')->nullable();
+            $table->text('video');
             $table->string('triwulan');
             $table->string('tahun');
             $table->timestamps();

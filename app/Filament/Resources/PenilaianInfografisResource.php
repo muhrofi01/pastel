@@ -19,6 +19,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class PenilaianInfografisResource extends Resource
@@ -26,6 +27,14 @@ class PenilaianInfografisResource extends Resource
     protected static ?string $model = PenilaianInfografis::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    public static function canCreate(): bool
+    {
+        $periodePenilaian = PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->first();
+        $isSudahMenilai = PenilaianInfografis::where('user_id', Auth::user()->id)->where('periode_penilaian_id', $periodePenilaian->id)->first();
+        
+        return !$isSudahMenilai ? true : false;
+    }
 
     public static function form(Form $form): Form
     {
@@ -37,9 +46,9 @@ class PenilaianInfografisResource extends Resource
                     ->relationship(
                         'periode_penilaian', 
                         'triwulan',  
-                        // fn ($query) => $query
-                        //     ->whereDate('mulai', '<=', now())
-                        //     ->whereDate('berakhir', '>=', now())
+                        fn ($query) => $query
+                            ->whereDate('mulai', '<=', now())
+                            ->whereDate('berakhir', '>=', now())
                     )
                     ->columnSpan([
                         'default' => '1',
@@ -58,12 +67,16 @@ class PenilaianInfografisResource extends Resource
                             return []; // belum pilih periode → kosong
                         }
                         
-                        return Infografis::where('triwulan', PeriodePenilaian::find("9f970268-48ae-4608-b0bc-6b8c3eee8f90")->triwulan)
+                        return Infografis::where('triwulan', PeriodePenilaian::find($periodeId)->triwulan)
                             ->where('user_id', '!=', auth()->id())
                             ->get()
                             ->mapWithKeys(function ($infografis) {
                                 return [
-                                    (string) $infografis->id => "<img src='" . Storage::disk('public')->url($infografis->gambar_1) . "' title='{$infografis->judul}'>",
+                                    (string) $infografis->id => '<video autoplay muted playsinline loop>
+                                                                    <source src="'.Storage::disk('public')->url($infografis->video).'" type="video/mp4">
+                                                                    <!-- fallback teks untuk browser lama -->
+                                                                    Browser Anda tidak mendukung elemen video.
+                                                                </video>',
                                 ];
                             })
                             ->toArray();

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\PenilaianInfografisResource\Pages;
 use App\Filament\Resources\PenilaianInfografisResource;
 use App\Models\PenilaianInfografis;
 use Filament\Actions;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreatePenilaianInfografis extends CreateRecord
@@ -14,6 +15,24 @@ class CreatePenilaianInfografis extends CreateRecord
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');
+    }
+
+    protected function getFormActions(): array
+    {
+        return [
+            Action::make('save')
+                ->label('Simpan')
+                ->color('primary')
+                ->requiresConfirmation()
+                ->modalHeading('Nilai Infografis')
+                ->modalDescription('Apakah Anda yakin untuk memilih 3 infografis tersebut?')
+                ->modalSubmitActionLabel('Ya, Simpan')
+                ->action(function () {
+                    $this->create(); // jalankan proses simpan bawaan
+                }),
+            $this->getCancelFormAction()
+                ->label('Batal'),
+        ];
     }
 
     protected function mutateFormDataBeforeCreate(array $data): array

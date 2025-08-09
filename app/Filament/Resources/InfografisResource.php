@@ -48,29 +48,13 @@ class InfografisResource extends Resource
                             '2025' => '2025',
                         ])
                         ->required(),
-                FileUpload::make('gambar_1')
-                    ->directory('image/infografis')
+                FileUpload::make('video')
+                    ->directory('infografis')
                     ->acceptedFileTypes([
-                        'image/jpeg', // .jpg, .jpeg
-                        'image/png',  // .png
-                    ]),
-                FileUpload::make('gambar_2')
-                    ->directory('image/infografis')
-                    ->acceptedFileTypes([
-                        'image/jpeg', // .jpg, .jpeg
-                        'image/png',  // .png
-                    ]),
-                FileUpload::make('gambar_3')
-                    ->directory('image/infografis')
-                    ->acceptedFileTypes([
-                        'image/jpeg', // .jpg, .jpeg
-                        'image/png',  // .png
-                    ]),
-                FileUpload::make('gambar_4')
-                    ->directory('image/infografis')
-                    ->acceptedFileTypes([
-                        'image/jpeg', // .jpg, .jpeg
-                        'image/png',  // .png
+                        'video/mp4',   // .mp4
+                        'video/avi',   // .avi
+                        'video/mpeg',  // .mpeg
+                        'video/quicktime', // .mov
                     ]),
             ]);
     }
@@ -82,15 +66,10 @@ class InfografisResource extends Resource
                 TextColumn::make('judul'),
                 TextColumn::make('triwulan'),
                 TextColumn::make('tahun'),
-                TextColumn::make('gambar_1')
-                    ->label('Gambar 1')
-                    ->formatStateUsing(fn ($state) => "Gambar 1")
-                    ->url(fn ($record) => Storage::disk('public')->url($record->gambar_1), true)
-                    ->openUrlInNewTab(),
-                TextColumn::make('gambar_2')
-                    ->label('Gambar 2')
-                    ->formatStateUsing(fn ($state) => "Gambar 2")
-                    ->url(fn ($record) => Storage::disk('public')->url($record->gambar_2), true)
+                TextColumn::make('video')
+                    ->label('Infografis')
+                    ->formatStateUsing(fn ($state) => "Link")
+                    ->url(fn ($record) => Storage::disk('public')->url($record->video), true)
                     ->openUrlInNewTab(),
             ])
             ->filters([
@@ -98,11 +77,6 @@ class InfografisResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 
