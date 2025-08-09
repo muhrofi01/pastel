@@ -11,6 +11,11 @@ class CreatePenilaianInfografis extends CreateRecord
 {
     protected static string $resource = PenilaianInfografisResource::class;
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         foreach ($data['infografis_id'] as $infografisId) {
@@ -25,5 +30,13 @@ class CreatePenilaianInfografis extends CreateRecord
         $data['infografis_id'] = null;
 
         return $data;
+    }
+
+    protected function afterCreate(): void
+    {
+        PenilaianInfografis::where('user_id', $this->record->user_id)
+                    ->where('infografis_id', null)
+                    ->delete();
+        
     }
 }

@@ -42,7 +42,7 @@ class PenilaianInfografisResource extends Resource
                     ->required(),
                 CheckboxList::make('infografis_id')
                     ->options(
-                        Infografis::all()->mapWithKeys(function ($infografis) {
+                        Infografis::whereNot('user_id', auth()->user()?->id)->get()->mapWithKeys(function ($infografis) {
                             return [
                                 $infografis->id => "<img src='".Storage::disk('public')->url($infografis->gambar_1). "' title='{$infografis->judul}'>"
                             ];
@@ -72,9 +72,6 @@ class PenilaianInfografisResource extends Resource
                 TextColumn::make('periode_penilaian.judul')
                     ->label('Periode')
                     ->wrap(),
-            ])
-            ->actions([
-                EditAction::make(),
             ]);
     }
 
