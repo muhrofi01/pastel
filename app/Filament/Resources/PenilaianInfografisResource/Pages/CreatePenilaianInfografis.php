@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\PenilaianInfografisResource\Pages;
 
 use App\Filament\Resources\PenilaianInfografisResource;
+use App\Models\NilaiInfografis;
 use App\Models\PenilaianInfografis;
 use App\Models\PeriodePenilaian;
 use Filament\Actions;
@@ -51,6 +52,23 @@ class CreatePenilaianInfografis extends CreateRecord
                 'infografis_id' => $infografisId,
                 'periode_penilaian_id' => $data['periode_penilaian_id']
             ]);
+            $nilaiInfografis = NilaiInfografis::where('user_id', $data['user_id'])
+                                            ->where('infografis_id', $infografisId)
+                                            ->first();
+            if (!$nilaiInfografis) {
+                NilaiInfografis::create([
+                    'user_id' => $data['user_id'],
+                    'infografis_id' => $infografisId,
+                    'periode_penilaian_id' => $data['periode_penilaian_id'],
+                    'nilai' => 1
+                ]);
+            } else {
+                NilaiInfografis::where('user_id', $data['user_id'])
+                            ->where('infografis_id', $infografisId)
+                            ->where('periode_penilaian_id', $data['periode_penilaian_id'])
+                            ->increment('nilai');
+            }
+            
         }
 
         // Kosongkan supaya Filament nggak nyari kolom 'infografis' di tabel utama
