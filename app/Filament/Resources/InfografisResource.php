@@ -23,6 +23,10 @@ class InfografisResource extends Resource
     protected static ?string $model = Infografis::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    
+    protected static ?string $navigationGroup = 'Manajemen Penilaian';
+
+    protected static ?string $navigationLabel = 'Infografis';
 
     public static function form(Form $form): Form
     {
@@ -63,7 +67,7 @@ class InfografisResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('judul'),
+                TextColumn::make('judul')->wrap(),
                 TextColumn::make('triwulan'),
                 TextColumn::make('tahun'),
                 TextColumn::make('video')

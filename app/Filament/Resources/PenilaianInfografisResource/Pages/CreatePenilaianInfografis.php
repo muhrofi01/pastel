@@ -4,6 +4,7 @@ namespace App\Filament\Resources\PenilaianInfografisResource\Pages;
 
 use App\Filament\Resources\PenilaianInfografisResource;
 use App\Models\PenilaianInfografis;
+use App\Models\PeriodePenilaian;
 use Filament\Actions;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\CreateRecord;
@@ -11,7 +12,14 @@ use Filament\Resources\Pages\CreateRecord;
 class CreatePenilaianInfografis extends CreateRecord
 {
     protected static string $resource = PenilaianInfografisResource::class;
+    
+    public function getTitle(): string
+    {
+        $periode = PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->first()?->triwulan ?? 'Tanpa Periode';
 
+        return "Penilaian IGA BAKAR - {$periode}";
+    }
+    
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');

@@ -17,6 +17,11 @@ class PenilaianInfografis extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function infografis()
+    {
+        return $this->belongsTo(Infografis::class, 'infografis_id');
+    }
+
     public function periode_penilaian()
     {
         return $this->belongsTo(PeriodePenilaian::class, 'periode_penilaian_id');
