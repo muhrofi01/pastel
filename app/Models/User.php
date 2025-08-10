@@ -8,6 +8,7 @@ use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -17,9 +18,9 @@ class User extends Authenticatable
 
     public function canAccessPanel(Panel $panel): bool
     {
-        // Implement your authorization logic here
-        // Example: return str_ends_with($this->email, '@yourdomain.com') && $this->hasVerifiedEmail();
-        return true; // For initial testing, but replace with secure logic
+        $canAccess = auth()->check() && str_ends_with(auth()->user()->email, '@bps.go.id');
+        Log::info('canAccessPanel called', ['canAccess' => $canAccess, 'email' => auth()->user()->email ?? 'guest']);
+        return $canAccess;
     }
 
     /**
