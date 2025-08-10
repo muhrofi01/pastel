@@ -9,37 +9,30 @@
         { "src": "/(.*)", "dest": "/api/index.php" }
     ],
     "public": true,
+    "buildCommand": "vite build",
     "outputDirectory": "public",
     "env": {
         "APP_NAME": "PASTEL",
         "APP_ENV": "production",
-        "APP_KEY": "base64:maQaYjydPiktlrWjnNkg7TkkD6WF+8DYZGmLwk37AIA=",
+        "APP_KEY": "base64:Cfk3Z2TrqWJyGn8IPcV1uZP1dL2OfdiD0GPso3Hlqos=",
         "APP_DEBUG": "true",
         "APP_URL": "",
 
-        "LOG_CHANNEL": "stack",
-        "LOG_DEPRECATIONS_CHANNEL": "null",
-        "LOG_LEVEL": "debug",
+        "APP_CONFIG_CACHE": "/tmp/config.php",
+        "APP_EVENTS_CACHE": "/tmp/events.php",
+        "APP_PACKAGES_CACHE": "/tmp/packages.php",
+        "APP_ROUTES_CACHE": "/tmp/routes.php",
+        "APP_SERVICES_CACHE": "/tmp/services.php",
+        "VIEW_COMPILED_PATH": "/tmp",
+        "CACHE_DRIVER": "array",
+        "LOG_CHANNEL": "stderr",
+        "SESSION_DRIVER": "cookie",
 
         "DB_CONNECTION": "mysql",
         "DB_HOST": "b9ng6p.h.filess.io",
         "DB_PORT": "3307",
         "DB_DATABASE": "pastel_rabbittie",
         "DB_USERNAME": "pastel_rabbittie",
-        "DB_PASSWORD": "37329e59e1a9156a1bf1e5fd4c5320e00707a28d",
-
-        "BROADCAST_DRIVER": "log",
-        "CACHE_DRIVER": "file",
-        "FILESYSTEM_DISK": "local",
-        "QUEUE_CONNECTION": "sync",
-        "SESSION_DRIVER": "file",
-        "SESSION_LIFETIME": "120",
-
-        "VITE_APP_NAME": "${APP_NAME}",
-        "VITE_PUSHER_APP_KEY": "${PUSHER_APP_KEY}",
-        "VITE_PUSHER_HOST": "${PUSHER_HOST}",
-        "VITE_PUSHER_PORT": "${PUSHER_PORT}",
-        "VITE_PUSHER_SCHEME": "${PUSHER_SCHEME}",
-        "VITE_PUSHER_APP_CLUSTER": "${PUSHER_APP_CLUSTER}"
+        "DB_PASSWORD": "37329e59e1a9156a1bf1e5fd4c5320e00707a28d"
     }
 }
