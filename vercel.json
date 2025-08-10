@@ -11,6 +11,7 @@
     "public": true,
     "outputDirectory": "public",
     "env": {
+        "APP_NAME": "PASTEL",
         "APP_ENV": "production",
         "APP_DEBUG": "true",
         "APP_URL": "",
@@ -22,8 +23,16 @@
         "APP_ROUTES_CACHE": "/tmp/routes.php",
         "APP_SERVICES_CACHE": "/tmp/services.php",
         "VIEW_COMPILED_PATH": "/tmp",
-        "CACHE_DRIVER": "array",
-        "LOG_CHANNEL": "stderr",
+
+        "LOG_CHANNEL": "stack",
+        "LOG_DEPRECATIONS_CHANNEL": "null",
+        "LOG_LEVEL": "debug",
+
+        "BROADCAST_DRIVER": "log",
+        "CACHE_DRIVER": "file",
+        "FILESYSTEM_DISK": "local",
+        "QUEUE_CONNECTION": "sync",
+        "SESSION_LIFETIME": "120",
         "SESSION_DRIVER": "file",
 
         "DB_CONNECTION": "mysql",
