@@ -29,11 +29,11 @@
         "LOG_LEVEL": "debug",
 
         "BROADCAST_DRIVER": "log",
-        "CACHE_DRIVER": "file",
+        "CACHE_DRIVER": "array",
         "FILESYSTEM_DISK": "local",
         "QUEUE_CONNECTION": "sync",
         "SESSION_LIFETIME": "120",
-        "SESSION_DRIVER": "file",
+        "SESSION_DRIVER": "array",
 
         "DB_CONNECTION": "mysql",
         "DB_HOST": "b9ng6p.h.filess.io",
