@@ -28,9 +28,9 @@
 
         "DB_CONNECTION": "mysql",
         "DB_HOST": "lvdbqh.h.filess.io",
-        "DB_PORT": "61002",
-        "DB_DATABASE": "minisurvei_nicegentle",
-        "DB_USERNAME": "minisurvei_nicegentle",
-        "DB_PASSWORD": "b6a28ed31b571991335bc94f66432572481f668e"
+        "DB_PORT": "3307",
+        "DB_DATABASE": "pastel_rabbittie",
+        "DB_USERNAME": "pastel_rabbittie",
+        "DB_PASSWORD": "37329e59e1a9156a1bf1e5fd4c5320e00707a28d"
     }
 }
