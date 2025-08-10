@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -12,6 +14,13 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        // Implement your authorization logic here
+        // Example: return str_ends_with($this->email, '@yourdomain.com') && $this->hasVerifiedEmail();
+        return true; // For initial testing, but replace with secure logic
+    }
 
     /**
      * The attributes that are mass assignable.

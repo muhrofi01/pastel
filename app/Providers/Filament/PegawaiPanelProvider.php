@@ -59,13 +59,4 @@ class PegawaiPanelProvider extends PanelProvider
                 Authenticate::class,
             ]);
     }
-
-    public function canAccessPanel(\Illuminate\Contracts\Auth\Authenticatable $user): bool
-    {
-        // if (! $user->hasRole('admin')) {
-        //     return redirect()->route('filament.admin.pages.dashboard'); // atau route lain
-        // }
-
-        return true;
-    }
 }
