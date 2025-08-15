@@ -62,11 +62,7 @@ class PenilaianInfografisResource extends Resource
                             ->get()
                             ->mapWithKeys(function ($infografis) {
                                 return [
-                                    (string) $infografis->id => '<video autoplay muted playsinline loop>
-                                                                    <source src="'.Storage::disk('public')->url($infografis->video).'" type="video/mp4">
-                                                                    <!-- fallback teks untuk browser lama -->
-                                                                    Browser Anda tidak mendukung elemen video.
-                                                                </video>',
+                                    (string) $infografis->id => $infografis->video,
                                 ];
                             })
                             ->toArray()

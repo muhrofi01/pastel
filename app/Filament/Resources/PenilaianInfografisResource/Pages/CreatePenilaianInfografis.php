@@ -52,19 +52,17 @@ class CreatePenilaianInfografis extends CreateRecord
                 'infografis_id' => $infografisId,
                 'periode_penilaian_id' => $data['periode_penilaian_id']
             ]);
-            $nilaiInfografis = NilaiInfografis::where('user_id', $data['user_id'])
-                                            ->where('infografis_id', $infografisId)
+            $nilaiInfografis = NilaiInfografis::where('infografis_id', $infografisId)
+                                            ->where('periode_penilaian_id', $data['periode_penilaian_id'])
                                             ->first();
             if (!$nilaiInfografis) {
                 NilaiInfografis::create([
-                    'user_id' => $data['user_id'],
                     'infografis_id' => $infografisId,
                     'periode_penilaian_id' => $data['periode_penilaian_id'],
                     'nilai' => 1
                 ]);
             } else {
-                NilaiInfografis::where('user_id', $data['user_id'])
-                            ->where('infografis_id', $infografisId)
+                NilaiInfografis::where('infografis_id', $infografisId)
                             ->where('periode_penilaian_id', $data['periode_penilaian_id'])
                             ->increment('nilai');
             }

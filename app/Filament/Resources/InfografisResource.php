@@ -40,26 +40,20 @@ class InfografisResource extends Resource
                 TextInput::make('judul')
                     ->required(),
                 Select::make('triwulan')
-                        ->options([
-                            'Triwulan I' => 'Triwulan I',
-                            'Triwulan II' => 'Triwulan II',
-                            'Triwulan III' => 'Triwulan III',
-                            'Triwulan IV' => 'Triwulan IV',
-                        ])
-                        ->required(),
+                    ->options([
+                        'Triwulan I' => 'Triwulan I',
+                        'Triwulan II' => 'Triwulan II',
+                        'Triwulan III' => 'Triwulan III',
+                        'Triwulan IV' => 'Triwulan IV',
+                    ])
+                    ->required(),
                 Select::make('tahun')
-                        ->options([
-                            '2025' => '2025',
-                        ])
-                        ->required(),
-                FileUpload::make('video')
-                    ->directory('infografis')
-                    ->acceptedFileTypes([
-                        'video/mp4',   // .mp4
-                        'video/avi',   // .avi
-                        'video/mpeg',  // .mpeg
-                        'video/quicktime', // .mov
-                    ]),
+                    ->options([
+                        '2025' => '2025',
+                    ])
+                    ->required(),
+                TextInput::make('video')
+                    ->required(),
             ]);
     }
 
@@ -70,11 +64,11 @@ class InfografisResource extends Resource
                 TextColumn::make('judul')->wrap(),
                 TextColumn::make('triwulan'),
                 TextColumn::make('tahun'),
-                TextColumn::make('video')
-                    ->label('Infografis')
-                    ->formatStateUsing(fn ($state) => "Link")
-                    ->url(fn ($record) => Storage::disk('public')->url($record->video), true)
-                    ->openUrlInNewTab(),
+                // TextColumn::make('video')
+                //     ->label('Infografis')
+                //     ->formatStateUsing(fn ($state) => "Link")
+                //     ->url(fn ($record) => Storage::disk('public')->url($record->video), true)
+                //     ->openUrlInNewTab(),
             ])
             ->filters([
                 //
