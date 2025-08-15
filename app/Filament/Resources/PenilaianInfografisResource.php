@@ -54,10 +54,44 @@ class PenilaianInfografisResource extends Resource
                 Hidden::make('periode_penilaian_id')
                     ->default(fn () => PeriodePenilaian::whereDate('mulai', '<=', now())
                                         ->whereDate('berakhir', '>=', now())->first()->id),
-                CheckboxList::make('infografis_id')
-                    ->label('Pilih 3 Infografis Terbaik')
+                CheckboxList::make('infografis_ahli_id')
+                    ->label('Pilih 3 Infografis Terbaik Jenjang Ahli')
                     ->options(
-                        Infografis::where('triwulan', PeriodePenilaian::find(PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->first()->id)->triwulan)
+                            Infografis::whereHas('user', function ($query) {
+                                $query->where('jenjang', 'Ahli');
+                            })
+                            ->where('triwulan', PeriodePenilaian::find(PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->first()->id)->triwulan)
+                            ->where('user_id', '!=', Auth::user()->id)
+                            ->get()
+                            ->mapWithKeys(function ($infografis) {
+                                return [
+                                    (string) $infografis->id => $infografis->video,
+                                ];
+                            })
+                            ->toArray()
+                    )
+                    ->columns(3)
+                    ->columnSpan([
+                        'default' => '1',
+                        'sm' => '3'
+                    ])
+                    ->gridDirection('row')
+                    ->allowHtml()
+                    ->rules([
+                        'array',
+                        'size:3', // Harus tepat 3 pilihan
+                    ])
+                    ->required(),
+                CheckboxList::make('infografis_pelaksana_id')
+                    ->label('Pilih 3 Infografis Terbaik Jenjang Terampil/Pelaksana')
+                    ->extraAttributes([
+                        'style' => 'font-size: 32px;', // ukuran label input
+                    ])
+                    ->options(
+                            Infografis::whereHas('user', function ($query) {
+                                $query->where('jenjang', 'Terampil/Pelaksana');
+                            })
+                            ->where('triwulan', PeriodePenilaian::find(PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->first()->id)->triwulan)
                             ->where('user_id', '!=', Auth::user()->id)
                             ->get()
                             ->mapWithKeys(function ($infografis) {

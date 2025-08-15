@@ -61,6 +61,7 @@ class InfografisResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('user.name')->wrap(),
                 TextColumn::make('judul')->wrap(),
                 TextColumn::make('triwulan'),
                 TextColumn::make('tahun'),

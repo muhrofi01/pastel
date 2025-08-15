@@ -22,8 +22,17 @@ class UserResource extends Resource
     protected static function getCreateFormSchema(): array
     {
         return [
-                TextInput::make('name'),
-                TextInput::make('email'),
+                TextInput::make('name')
+                    ->required(),
+                TextInput::make('email')
+                    ->required(),
+                Select::make('jenjang')
+                    ->options([
+                        'Ahli' => 'Ahli',
+                        'Terampil/Pelaksana' => 'Terampil/Pelaksana',
+                        'Fungsional Umum' => 'Fungsional Umum',
+                    ])
+                    ->required(),
                 Select::make('roles')
                     ->relationship('roles', 'name')
                     ->preload(),
@@ -36,8 +45,17 @@ class UserResource extends Resource
     protected static function getEditFormSchema(): array
     {
         return [
-                TextInput::make('name'),
-                TextInput::make('email'),
+                TextInput::make('name')
+                    ->required(),
+                TextInput::make('email')
+                    ->required(),
+                Select::make('jenjang')
+                    ->options([
+                        'Ahli' => 'Ahli',
+                        'Terampil/Pelaksana' => 'Terampil/Pelaksana',
+                        'Fungsional Umum' => 'Fungsional Umum',
+                    ])
+                    ->required(),
                 Select::make('roles')
                     ->relationship('roles', 'name')
                     ->preload()

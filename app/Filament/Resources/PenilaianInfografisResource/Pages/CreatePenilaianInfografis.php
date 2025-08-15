@@ -46,7 +46,30 @@ class CreatePenilaianInfografis extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        foreach ($data['infografis_id'] as $infografisId) {
+        foreach ($data['infografis_ahli_id'] as $infografisId) {
+            PenilaianInfografis::create([
+                'user_id' => $data['user_id'],
+                'infografis_id' => $infografisId,
+                'periode_penilaian_id' => $data['periode_penilaian_id']
+            ]);
+            $nilaiInfografis = NilaiInfografis::where('infografis_id', $infografisId)
+                                            ->where('periode_penilaian_id', $data['periode_penilaian_id'])
+                                            ->first();
+            if (!$nilaiInfografis) {
+                NilaiInfografis::create([
+                    'infografis_id' => $infografisId,
+                    'periode_penilaian_id' => $data['periode_penilaian_id'],
+                    'nilai' => 1
+                ]);
+            } else {
+                NilaiInfografis::where('infografis_id', $infografisId)
+                            ->where('periode_penilaian_id', $data['periode_penilaian_id'])
+                            ->increment('nilai');
+            }
+            
+        }
+
+        foreach ($data['infografis_pelaksana_id'] as $infografisId) {
             PenilaianInfografis::create([
                 'user_id' => $data['user_id'],
                 'infografis_id' => $infografisId,
@@ -70,7 +93,8 @@ class CreatePenilaianInfografis extends CreateRecord
         }
 
         // Kosongkan supaya Filament nggak nyari kolom 'infografis' di tabel utama
-        $data['infografis_id'] = null;
+        $data['infografis_ahli_id'] = null;
+        $data['infografis_pelaksana_id'] = null;
 
         return $data;
     }

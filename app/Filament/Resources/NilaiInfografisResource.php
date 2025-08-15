@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -49,11 +50,23 @@ class NilaiInfografisResource extends Resource
                 TextColumn::make('periode_penilaian.triwulan')->label('Triwulan'),
                 TextColumn::make('periode_penilaian.tahun')->label('Tahun'),
                 TextColumn::make('infografis.user.name')->label('Nama'),
+                TextColumn::make('infografis.user.jenjang')->label('Jenjang'),
                 TextColumn::make('infografis.judul')->label('Judul')->wrap(),
                 TextColumn::make('nilai')
             ])
             ->filters([
-                //
+                SelectFilter::make('infografis.user.jenjang')
+                    ->options([
+                        'Ahli' => 'Ahli',
+                        'Terampil/Pelaksana' => 'Terampil/Pelaksana',
+                    ]),
+                SelectFilter::make('periode_penilaian.triwulan')
+                    ->options([
+                        'Triwulan I' => 'Triwulan I',
+                        'Triwulan II' => 'Triwulan II',
+                        'Triwulan III' => 'Triwulan III',
+                        'Triwulan IV' => 'Triwulan IV',
+                    ]),
             ]);
     }
 
