@@ -58,7 +58,7 @@ class PenilaianInfografisResource extends Resource
                     ->label('Pilih 3 Infografis Terbaik Jenjang Ahli')
                     ->options(
                             Infografis::whereHas('user', function ($query) {
-                                $query->where('jenjang', 'Ahli');
+                                $query->where('jenjang', 'Ahli')->where('name', '!=', 'Hamidati Uliya Rahmi');
                             })
                             ->where('triwulan', PeriodePenilaian::find(PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->first()->id)->triwulan)
                             ->where('user_id', '!=', Auth::user()->id)
@@ -89,7 +89,7 @@ class PenilaianInfografisResource extends Resource
                     ])
                     ->options(
                             Infografis::whereHas('user', function ($query) {
-                                $query->where('jenjang', 'Terampil/Pelaksana');
+                                $query->where('jenjang', 'Terampil/Pelaksana')->where('name', '!=', 'Nian Qurrota');
                             })
                             ->where('triwulan', PeriodePenilaian::find(PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->first()->id)->triwulan)
                             ->where('user_id', '!=', Auth::user()->id)

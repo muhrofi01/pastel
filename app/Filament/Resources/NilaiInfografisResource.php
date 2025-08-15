@@ -55,18 +55,7 @@ class NilaiInfografisResource extends Resource
                 TextColumn::make('nilai')
             ])
             ->filters([
-                SelectFilter::make('infografis.user.jenjang')
-                    ->options([
-                        'Ahli' => 'Ahli',
-                        'Terampil/Pelaksana' => 'Terampil/Pelaksana',
-                    ]),
-                SelectFilter::make('periode_penilaian.triwulan')
-                    ->options([
-                        'Triwulan I' => 'Triwulan I',
-                        'Triwulan II' => 'Triwulan II',
-                        'Triwulan III' => 'Triwulan III',
-                        'Triwulan IV' => 'Triwulan IV',
-                    ]),
+                
             ]);
     }
 

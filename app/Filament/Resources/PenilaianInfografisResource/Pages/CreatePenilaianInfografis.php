@@ -34,7 +34,7 @@ class CreatePenilaianInfografis extends CreateRecord
                 ->color('primary')
                 ->requiresConfirmation()
                 ->modalHeading('Nilai Infografis')
-                ->modalDescription('Apakah Anda yakin untuk memilih 3 infografis tersebut?')
+                ->modalDescription('Apakah Anda yakin untuk memilih 6 infografis tersebut?')
                 ->modalSubmitActionLabel('Ya, Simpan')
                 ->action(function () {
                     $this->create(); // jalankan proses simpan bawaan
