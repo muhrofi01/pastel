@@ -13,8 +13,6 @@ return new class extends Migration
     {
         Schema::create('nilai_infografis', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
             $table->string('periode_penilaian_id');
             $table->foreign('periode_penilaian_id')->references('id')->on('periode_penilaians');
             $table->string('infografis_id');
