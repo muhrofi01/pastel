@@ -15,6 +15,8 @@ use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ViewField;
+use Filament\Forms\Components\Wizard;
+use Filament\Forms\Components\Wizard\Step;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -49,70 +51,83 @@ class PenilaianInfografisResource extends Resource
     {
         return $form
             ->schema([
-                Hidden::make('user_id')
-                    ->default(fn () => Auth::user()->id),
-                Hidden::make('periode_penilaian_id')
-                    ->default(fn () => PeriodePenilaian::whereDate('mulai', '<=', now())
-                                        ->whereDate('berakhir', '>=', now())->first()->id),
-                CheckboxList::make('infografis_ahli_id')
-                    ->label('Pilih 3 Infografis Terbaik Jenjang Ahli')
-                    ->options(
-                            Infografis::whereHas('user', function ($query) {
-                                $query->where('jenjang', 'Ahli')->where('name', '!=', 'Hamidati Uliya Rahmi');
-                            })
-                            ->where('triwulan', PeriodePenilaian::find(PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->first()->id)->triwulan)
-                            ->where('user_id', '!=', Auth::user()->id)
-                            ->get()
-                            ->mapWithKeys(function ($infografis) {
-                                return [
-                                    (string) $infografis->id => $infografis->video,
-                                ];
-                            })
-                            ->toArray()
-                    )
-                    ->columns(3)
-                    ->columnSpan([
-                        'default' => '1',
-                        'sm' => '3'
-                    ])
-                    ->gridDirection('row')
-                    ->allowHtml()
-                    ->rules([
-                        'array',
-                        'size:3', // Harus tepat 3 pilihan
-                    ])
-                    ->required(),
-                CheckboxList::make('infografis_pelaksana_id')
-                    ->label('Pilih 3 Infografis Terbaik Jenjang Terampil/Pelaksana')
-                    ->extraAttributes([
-                        'style' => 'font-size: 32px;', // ukuran label input
-                    ])
-                    ->options(
-                            Infografis::whereHas('user', function ($query) {
-                                $query->where('jenjang', 'Terampil/Pelaksana')->where('name', '!=', 'Nian Qurrota');
-                            })
-                            ->where('triwulan', PeriodePenilaian::find(PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->first()->id)->triwulan)
-                            ->where('user_id', '!=', Auth::user()->id)
-                            ->get()
-                            ->mapWithKeys(function ($infografis) {
-                                return [
-                                    (string) $infografis->id => $infografis->video,
-                                ];
-                            })
-                            ->toArray()
-                    )
-                    ->columns(3)
-                    ->columnSpan([
-                        'default' => '1',
-                        'sm' => '3'
-                    ])
-                    ->gridDirection('row')
-                    ->allowHtml()
-                    ->rules([
-                        'array',
-                        'size:3', // Harus tepat 3 pilihan
-                    ])
-                    ->required()
+                Wizard::make([
+                    Step::make('Infografis Jenjang Ahli')
+                        ->schema([
+                            Hidden::make('user_id')
+                                ->default(fn () => Auth::user()->id),
+                            Hidden::make('periode_penilaian_id')
+                                ->default(fn () => PeriodePenilaian::whereDate('mulai', '<=', now())
+                                                    ->whereDate('berakhir', '>=', now())->first()->id),
+                            CheckboxList::make('infografis_ahli_id')
+                                ->label('Pilih 3 Infografis Terbaik Jenjang Ahli')
+                                ->options(
+                                        Infografis::whereHas('user', function ($query) {
+                                            $query->where('jenjang', 'Ahli')->where('name', '!=', 'Hamidati Uliya Rahmi');
+                                        })
+                                        ->where('triwulan', PeriodePenilaian::find(PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->first()->id)->triwulan)
+                                        ->where('user_id', '!=', Auth::user()->id)
+                                        ->get()
+                                        ->mapWithKeys(function ($infografis) {
+                                            return [
+                                                (string) $infografis->id => $infografis->video,
+                                            ];
+                                        })
+                                        ->toArray()
+                                )
+                                ->columns(3)
+                                ->columnSpan([
+                                    'default' => '1',
+                                    'sm' => '3'
+                                ])
+                                ->gridDirection('row')
+                                ->allowHtml()
+                                ->rules([
+                                    'array',
+                                    'size:3', // Harus tepat 3 pilihan
+                                ])
+                                ->required(),
+                            
+                        ]),
+                    Step::make('Infografis Jenjang Terampil/Pelaksana')
+                        ->schema([
+                            CheckboxList::make('infografis_pelaksana_id')
+                                ->label('Pilih 3 Infografis Terbaik Jenjang Terampil/Pelaksana')
+                                ->extraAttributes([
+                                    'style' => 'font-size: 32px;', // ukuran label input
+                                ])
+                                ->options(
+                                        Infografis::whereHas('user', function ($query) {
+                                            $query->where('jenjang', 'Terampil/Pelaksana')->where('name', '!=', 'Nian Qurrota');
+                                        })
+                                        ->where('triwulan', PeriodePenilaian::find(PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->first()->id)->triwulan)
+                                        ->where('user_id', '!=', Auth::user()->id)
+                                        ->get()
+                                        ->mapWithKeys(function ($infografis) {
+                                            return [
+                                                (string) $infografis->id => $infografis->video,
+                                            ];
+                                        })
+                                        ->toArray()
+                                )
+                                ->columns(3)
+                                ->columnSpan([
+                                    'default' => '1',
+                                    'sm' => '3'
+                                ])
+                                ->gridDirection('row')
+                                ->allowHtml()
+                                ->rules([
+                                    'array',
+                                    'size:3', // Harus tepat 3 pilihan
+                                ])
+                                ->required()
+                        ]),
+                ])
+                ->columnSpan([
+                    'default' => 1,
+                    'sm' => 2
+                ]),
             ]);
     }
 
