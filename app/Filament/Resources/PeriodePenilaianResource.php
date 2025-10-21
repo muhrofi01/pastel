@@ -49,6 +49,7 @@ class PeriodePenilaianResource extends Resource
                         Select::make('tahun')
                                 ->options([
                                     '2025' => '2025',
+                                    '2026' => '2026',
                                 ])
                                 ->required(),
                         Select::make('jenis')

@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PenilaianInfografisResource\Pages;
 use App\Filament\Resources\PenilaianInfografisResource\RelationManagers;
 use App\Models\Infografis;
+use App\Models\Pemenang;
 use App\Models\PenilaianInfografis;
 use App\Models\PeriodePenilaian;
 use Filament\Forms;
@@ -41,7 +42,7 @@ class PenilaianInfografisResource extends Resource
 
     public static function canCreate(): bool
     {
-        $periodePenilaian = PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->orderBy('triwulan', 'desc')->orderBy('triwulan', 'desc')->first();
+        $periodePenilaian = PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->orderBy('triwulan', 'desc')->orderBy('tahun', 'desc')->first();
         
         if(!$periodePenilaian) {
             return false;
@@ -63,23 +64,30 @@ class PenilaianInfografisResource extends Resource
                                 ->default(fn () => Auth::user()->id),
                             Hidden::make('periode_penilaian_id')
                                 ->default(fn () => PeriodePenilaian::whereDate('mulai', '<=', now())
-                                                    ->whereDate('berakhir', '>=', now())->orderBy('triwulan', 'desc')->first()->id),
+                                                    ->whereDate('berakhir', '>=', now())->orderBy('triwulan', 'desc')->orderBy('tahun', 'desc')->first()->id),
                             CheckboxList::make('infografis_ahli_id')
                                 ->label('Pilih 3 Infografis Terbaik Jenjang Ahli')
-                                ->options(
-                                        Infografis::whereHas('user', function ($query) {
-                                            $query->where('jenjang', 'Ahli')->whereNotIn('name', ['Hamidati Uliya Rahmi', 'Muhammad Abdurrofi']);
-                                        })
-                                        ->where('triwulan', PeriodePenilaian::find(PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->orderBy('triwulan', 'desc')->first()->id)->triwulan)
-                                        ->where('user_id', '!=', Auth::user()->id)
-                                        ->get()
-                                        ->mapWithKeys(function ($infografis) {
-                                            return [
-                                                (string) $infografis->id => $infografis->video,
-                                            ];
-                                        })
-                                        ->toArray()
-                                )
+                                ->options(function () {
+                                    $pemenangUserIds = Pemenang::whereHas('user', function ($query) {
+                                                            $query->where('jenjang', 'Ahli');
+                                                        })
+                                                        ->whereHas('periode_penilaian', function ($query) {
+                                                            $query->where('tahun', now()->year);
+                                                        })
+                                                        ->pluck('user_id');
+                                    return Infografis::whereHas('user', function ($query) use ($pemenangUserIds) {
+                                        $query->where('jenjang', 'Ahli')->whereNotIn('user_id', $pemenangUserIds);
+                                    })
+                                    ->where('triwulan', PeriodePenilaian::find(PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->orderBy('triwulan', 'desc')->orderBy('tahun', 'desc')->first()->id)->triwulan)
+                                    ->where('user_id', '!=', Auth::user()->id)
+                                    ->get()
+                                    ->mapWithKeys(function ($infografis) {
+                                        return [
+                                            (string) $infografis->id => $infografis->video,
+                                        ];
+                                    })
+                                    ->toArray();
+                                })
                                 ->columns(3)
                                 ->columnSpan([
                                     'default' => '1',
@@ -101,20 +109,27 @@ class PenilaianInfografisResource extends Resource
                                 ->extraAttributes([
                                     'style' => 'font-size: 32px;', // ukuran label input
                                 ])
-                                ->options(
-                                        Infografis::whereHas('user', function ($query) {
-                                            $query->where('jenjang', 'Terampil/Pelaksana')->whereNotIn('name', ['Nian Qurrota', 'Rafliansyah M. Olii']);
-                                        })
-                                        ->where('triwulan', PeriodePenilaian::find(PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->orderBy('triwulan', 'desc')->first()->id)->triwulan)
-                                        ->where('user_id', '!=', Auth::user()->id)
-                                        ->get()
-                                        ->mapWithKeys(function ($infografis) {
-                                            return [
-                                                (string) $infografis->id => $infografis->video,
-                                            ];
-                                        })
-                                        ->toArray()
-                                )
+                                ->options(function () {
+                                    $pemenangUserIds = Pemenang::whereHas('user', function ($query) {
+                                                            $query->where('jenjang', 'Terampil/Pelaksana');
+                                                        })
+                                                        ->whereHas('periode_penilaian', function ($query) {
+                                                            $query->where('tahun', now()->year);
+                                                        })
+                                                        ->pluck('user_id');
+                                    return Infografis::whereHas('user', function ($query) use ($pemenangUserIds) {
+                                        $query->where('jenjang', 'Terampil/Pelaksana')->whereNotIn('user_id', $pemenangUserIds);
+                                    })
+                                    ->where('triwulan', PeriodePenilaian::find(PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->orderBy('triwulan', 'desc')->orderBy('tahun', 'desc')->first()->id)->triwulan)
+                                    ->where('user_id', '!=', Auth::user()->id)
+                                    ->get()
+                                    ->mapWithKeys(function ($infografis) {
+                                        return [
+                                            (string) $infografis->id => $infografis->video,
+                                        ];
+                                    })
+                                    ->toArray();
+                                })
                                 ->columns(3)
                                 ->columnSpan([
                                     'default' => '1',
@@ -138,7 +153,7 @@ class PenilaianInfografisResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {   
-        $periodePenilaian = PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->orderBy('triwulan', 'desc')->first();
+        $periodePenilaian = PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->orderBy('triwulan', 'desc')->orderBy('tahun', 'desc')->first();
         
         if(!$periodePenilaian) {
             return parent::getEloquentQuery()->whereRaw('1 = 0');
