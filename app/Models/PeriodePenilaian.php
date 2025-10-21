@@ -16,4 +16,9 @@ class PeriodePenilaian extends Model
     {
         return $this->hasMany(PenilaianInfografis::class, 'penilaian_infografis_id');
     }
+
+    public function pemenang()
+    {
+        return $this->hasMany(Pemenang::class, 'pemenang_id');
+    }
 }
