@@ -41,7 +41,12 @@ class PenilaianInfografisResource extends Resource
 
     public static function canCreate(): bool
     {
-        $periodePenilaian = PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->first();
+        $periodePenilaian = PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->orderBy('triwulan', 'desc')->orderBy('triwulan', 'desc')->first();
+        
+        if(!$periodePenilaian) {
+            return false;
+        }
+
         $isSudahMenilai = PenilaianInfografis::where('user_id', Auth::user()->id)->where('periode_penilaian_id', $periodePenilaian->id)->first();
         
         return !$isSudahMenilai ? true : false;
@@ -58,14 +63,14 @@ class PenilaianInfografisResource extends Resource
                                 ->default(fn () => Auth::user()->id),
                             Hidden::make('periode_penilaian_id')
                                 ->default(fn () => PeriodePenilaian::whereDate('mulai', '<=', now())
-                                                    ->whereDate('berakhir', '>=', now())->first()->id),
+                                                    ->whereDate('berakhir', '>=', now())->orderBy('triwulan', 'desc')->first()->id),
                             CheckboxList::make('infografis_ahli_id')
                                 ->label('Pilih 3 Infografis Terbaik Jenjang Ahli')
                                 ->options(
                                         Infografis::whereHas('user', function ($query) {
-                                            $query->where('jenjang', 'Ahli')->where('name', '!=', 'Hamidati Uliya Rahmi');
+                                            $query->where('jenjang', 'Ahli')->whereNotIn('name', ['Hamidati Uliya Rahmi', 'Muhammad Abdurrofi']);
                                         })
-                                        ->where('triwulan', PeriodePenilaian::find(PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->first()->id)->triwulan)
+                                        ->where('triwulan', PeriodePenilaian::find(PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->orderBy('triwulan', 'desc')->first()->id)->triwulan)
                                         ->where('user_id', '!=', Auth::user()->id)
                                         ->get()
                                         ->mapWithKeys(function ($infografis) {
@@ -98,9 +103,9 @@ class PenilaianInfografisResource extends Resource
                                 ])
                                 ->options(
                                         Infografis::whereHas('user', function ($query) {
-                                            $query->where('jenjang', 'Terampil/Pelaksana')->where('name', '!=', 'Nian Qurrota');
+                                            $query->where('jenjang', 'Terampil/Pelaksana')->whereNotIn('name', ['Nian Qurrota', 'Rafliansyah M. Olii']);
                                         })
-                                        ->where('triwulan', PeriodePenilaian::find(PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->first()->id)->triwulan)
+                                        ->where('triwulan', PeriodePenilaian::find(PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->orderBy('triwulan', 'desc')->first()->id)->triwulan)
                                         ->where('user_id', '!=', Auth::user()->id)
                                         ->get()
                                         ->mapWithKeys(function ($infografis) {
@@ -133,13 +138,36 @@ class PenilaianInfografisResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {   
-        return parent::getEloquentQuery()->where('user_id', Auth::user()->id);
+        $periodePenilaian = PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->orderBy('triwulan', 'desc')->first();
+        
+        if(!$periodePenilaian) {
+            return parent::getEloquentQuery()->whereRaw('1 = 0');
+        }
+
+        if (Auth::user()->hasRole('Super Admin') || Auth::user()->name == "Prasaja Arifiyanto") {
+            return parent::getEloquentQuery()
+                    ->selectRaw('MIN(id) as id, user_id, periode_penilaian_id')
+                    ->with(['user', 'periode_penilaian'])
+                    ->groupBy('user_id', 'periode_penilaian_id');
+        } else {
+            return parent::getEloquentQuery()
+                    ->selectRaw('MIN(id) as id, user_id, periode_penilaian_id')
+                    ->with(['user', 'periode_penilaian'])
+                    ->where('user_id', Auth::id())
+                    ->groupBy('user_id', 'periode_penilaian_id');
+        }
+        
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
+                TextColumn::make('no')
+                    ->label('No')
+                    ->rowIndex()
+                    ->width('50px') // lebar kolom
+                    ->alignCenter(),
                 TextColumn::make('user.name')
                     ->label('Pegawai'),
                 TextColumn::make('periode_penilaian.triwulan')
