@@ -55,7 +55,42 @@ class NilaiInfografisResource extends Resource
                 TextColumn::make('nilai')
             ])
             ->filters([
-                
+                SelectFilter::make('triwulan')
+                    ->label('Triwulan')
+                    ->options([
+                        'Triwulan I' => 'Triwulan I',
+                        'Triwulan II' => 'Triwulan II',
+                        'Triwulan III' => 'Triwulan III',
+                        'Triwulan IV' => 'Triwulan IV',
+                    ])
+                    ->query(function ($query, $state) {
+                        if ($state) {
+                            $query->whereHas('periode_penilaian', function ($q) use ($state) {
+                                $q->where('triwulan', $state);
+                            });
+                        } else {
+                            $query->whereHas('periode_penilaian', function ($q) use ($state) {
+                                $q->whereIn('triwulan', ['Triwulan I', 'Triwulan II', 'Triwulan III', 'Triwulan IV']);
+                            });
+                        }
+                    }),
+                SelectFilter::make('tahun')
+                    ->label('Tahun')
+                    ->options([
+                        '2025' => '2025',
+                        '2026' => '2026',
+                    ])
+                    ->query(function ($query, $state) {
+                        if ($state) {
+                            $query->whereHas('periode_penilaian', function ($q) use ($state) {
+                                $q->where('tahun', $state);
+                            });
+                        } else {
+                            $query->whereHas('periode_penilaian', function ($q) use ($state) {
+                                $q->whereIn('tahun', ['2025', '2026']);
+                            });
+                        }
+                    }),
             ]);
     }
 

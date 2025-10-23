@@ -23,6 +23,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -153,11 +154,11 @@ class PenilaianInfografisResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {   
-        $periodePenilaian = PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->orderBy('triwulan', 'desc')->orderBy('tahun', 'desc')->first();
+        // $periodePenilaian = PeriodePenilaian::whereDate('mulai', '<=', now())->whereDate('berakhir', '>=', now())->orderBy('triwulan', 'desc')->orderBy('tahun', 'desc')->first();
         
-        if(!$periodePenilaian) {
-            return parent::getEloquentQuery()->whereRaw('1 = 0');
-        }
+        // if(!$periodePenilaian) {
+        //     return parent::getEloquentQuery()->whereRaw('1 = 0');
+        // }
 
         if (Auth::user()->hasRole('Super Admin') || Auth::user()->name == "Prasaja Arifiyanto") {
             return parent::getEloquentQuery()
@@ -189,6 +190,36 @@ class PenilaianInfografisResource extends Resource
                     ->label('Triwulan')  ,
                 TextColumn::make('periode_penilaian.tahun')
                     ->label('Tahun'),
+            ])
+            ->filters([
+                SelectFilter::make('triwulan')
+                    ->label('Triwulan')
+                    ->options([
+                        'Triwulan I' => 'Triwulan I',
+                        'Triwulan II' => 'Triwulan II',
+                        'Triwulan III' => 'Triwulan III',
+                        'Triwulan IV' => 'Triwulan IV',
+                    ])
+                    ->query(function ($query, $state) {
+                        if ($state) {
+                            $query->whereHas('periode_penilaian', function ($q) use ($state) {
+                                $q->where('triwulan', $state);
+                            });
+                        }
+                    }),
+                SelectFilter::make('tahun')
+                    ->label('Tahun')
+                    ->options([
+                        '2025' => '2025',
+                        '2026' => '2026',
+                    ])
+                    ->query(function ($query, $state) {
+                        if ($state) {
+                            $query->whereHas('periode_penilaian', function ($q) use ($state) {
+                                $q->where('tahun', $state);
+                            });
+                        }
+                    }),
             ]);
     }
 
