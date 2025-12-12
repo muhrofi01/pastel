@@ -19,6 +19,13 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationLabel = 'Pengguna';
+
+    public function getTitle(): string
+    {
+        return 'Pengguna';
+    }
+
     protected static function getCreateFormSchema(): array
     {
         return [
