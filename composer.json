@@ -9,6 +9,7 @@
         "bezhansalleh/filament-shield": "^3.3",
         "filament/filament": "3.3",
         "guzzlehttp/guzzle": "^7.2",
+        "irsadarief/jkd-sso": "^1.8",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8"
