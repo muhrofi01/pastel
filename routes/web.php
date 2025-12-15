@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/sso', [App\Http\Controllers\SsoController::class, 'ssologin'])->name('sso-login');
+Route::get('/post-sso', [App\Http\Controllers\SsoController::class, 'postssologin'])->name('post-sso-login');
+
+// Route::get('/', function () {
+//     return view('welcome');
+// });

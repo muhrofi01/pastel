@@ -30,7 +30,7 @@ class PegawaiPanelProvider extends PanelProvider
             ->colors([
                 'primary' => '#F07140',
             ])
-            ->login()
+            ->login(\App\Filament\Pages\SSOLogin::class)
             ->brandLogo(asset('images/logo-pastel.png'))
             ->brandLogoHeight('3rem')
             ->brandName('PASTEL')
